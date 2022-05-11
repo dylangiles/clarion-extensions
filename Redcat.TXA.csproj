@@ -8,4 +8,8 @@
     <Exec Command="copy /B /V /Y $(OutDir)$(AssemblyName).dll C:\Clarion\11.0.13630\accessory\addins\Redcat\$(AssemblyName).dll" />
   </Target>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
 </Project>

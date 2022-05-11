@@ -26,6 +26,7 @@ namespace Redcat.TXA
         public const string PROPERTY_UNIQUE = "UNIQUE";
         public const string PROPERTY_DEPEND = "DEPEND";
         public const string PROPERTY_EMBED = "EMBED ";
+        public const string PROPERTY_NAME = "NAME ";
 
         public const string TYPE_DEFAULT = "DEFAULT";
         public const string TYPE_STRING = "STRING";

@@ -15,6 +15,16 @@ namespace Redcat.TXA
         public Procedure(string[] raw)
         {
             _raw = raw;
+
+            for(int i = 0; i < raw.Length; i++)
+            {
+                if(raw[i].Contains(Constants.PROPERTY_NAME))
+                {
+                    Name = raw[i].Replace(Constants.PROPERTY_NAME, string.Empty);
+                    break;
+                }
+            }
+
         }
     }
 }

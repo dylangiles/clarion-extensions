@@ -118,17 +118,17 @@ namespace Redcat.TXA
 
                         else if (_state == ParseState.Module)
                         {
-                            _modules.Add(new Module(currentModule.ToArray()));
+                            // Modules.Count + 1 because the module hasn't been added yet
+                            _modules.Add(new Module(currentModule.ToArray(), this, Modules.Count + 1));
                             currentModule.Clear();
-                            currentModule = null;
                         }
 
                         _state = ParseState.Module;
                         break;
 
-                    case Constants.SYMBOL_PROCEDURE:
-                        _state = ParseState.Procedure;
-                        break;
+                    //case Constants.SYMBOL_PROCEDURE:
+                    //    _state = ParseState.Procedure;
+                    //    break;
                 }
 
                 switch (_state)
@@ -149,11 +149,15 @@ namespace Redcat.TXA
                         break;
 
                     case ParseState.Module:
-                    case ParseState.Procedure:
                         currentModule.Add(_rawLines[i]);
                         break;
                 }
             }
+            
+            // Get the last module
+            if(_state == ParseState.Module)
+                _modules.Add(new Module(currentModule.ToArray(), this, Modules.Count + 1));
+            
 
             // This is only here as a spot to whack a breakpoint
             Console.WriteLine();
@@ -167,6 +171,8 @@ namespace Redcat.TXA
             return value;
 
         }
+
+        
 
     }
 }
