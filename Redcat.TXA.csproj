@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /B /V /Y $(OutDir)$(AssemblyName).dll C:\Clarion\11.0.13630\accessory\addins\Redcat\$(AssemblyName).dll" />
+  </Target>
+
+</Project>
