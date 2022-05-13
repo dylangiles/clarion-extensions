@@ -16,6 +16,7 @@ namespace Redcat.TXA
         public const string SYMBOL_EMBED = "[EMBED]";
         public const string SYMBOL_COMMON = "[COMMON]";
         public const string SYMBOL_PROMPTS = "[PROMPTS]";
+        public const string SYMBOL_END = "[END]";
 
         public const string PROPERTY_VERSION = "VERSION ";
         public const string PROPERTY_TODO = "TODO ";
@@ -27,6 +28,7 @@ namespace Redcat.TXA
         public const string PROPERTY_DEPEND = "DEPEND";
         public const string PROPERTY_EMBED = "EMBED ";
         public const string PROPERTY_NAME = "NAME ";
+        public const string PROPERTY_GLOBAL = "GLOBAL";
 
         public const string TYPE_DEFAULT = "DEFAULT";
         public const string TYPE_STRING = "STRING";

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,11 +10,20 @@ namespace Redcat.TXA
 {
     public class Module
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
+        public List<ProcedureSortOrder> SortOrder { get; set; }
+        
+        [JsonIgnore]
         public List<Procedure> Procedures { get; private set; }
-        public List<ProcedureSortOrder> SortOrder { get; private set; }
 
         private string[] _raw;
+
+        [JsonConstructor]
+        public Module()
+        {
+            Procedures = new List<Procedure>();
+            SortOrder = new List<ProcedureSortOrder>();
+        }
 
         public Module(string[] raw, ParsedApplication refApplication, int moduleIndex)
         {
@@ -68,11 +78,21 @@ namespace Redcat.TXA
                     }
                 }
             }
+
+            if(currentProcedure.Count > 0)
+            {
+                Procedures.Add(new Procedure(currentProcedure.ToArray()));
+                ProcedureSortOrder sortOrder = new ProcedureSortOrder();
+                sortOrder.Name = Procedures.Last().Name;
+                sortOrder.Order = Procedures.Count - 1;
+                SortOrder.Add(sortOrder);
+                currentProcedure.Clear();
+            }
         }
 
         public void DumpSortOrder(string filename)
         {
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(SortOrder, Newtonsoft.Json.Formatting.Indented);
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             using (FileStream fs = File.Create(filename))
             {
                 using (StreamWriter sw = new StreamWriter(fs))

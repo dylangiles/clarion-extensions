@@ -13,11 +13,12 @@ namespace Redcat.TXA
 
         public Embed(string[] lines)
         {
-            for(int i=0;i<lines.Length;i++)
+            for (int i = 0; i < lines.Length; i++)
             {
-                if(lines[i].Substring(0, Constants.PROPERTY_EMBED.Length) == Constants.PROPERTY_EMBED)
+                if (lines[i].Substring(0, Constants.PROPERTY_EMBED.Length) == Constants.PROPERTY_EMBED)
                 {
-                    Name = lines[i].Substring(Constants.PROPERTY_EMBED.Length).Replace("%", string.Empty);
+                    Name = lines[i].Substring(Constants.PROPERTY_EMBED.Length).Replace("%",
+                        string.Empty);
                 }
             }
         }

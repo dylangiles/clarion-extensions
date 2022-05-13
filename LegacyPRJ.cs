@@ -16,6 +16,7 @@ namespace Redcat.TXA
         public string Artifact { get; private set; }
 
         private string[] _raw;
+        public string[] Raw => _raw;
 
         public LegacyPRJ(string[] prjLines)
         {
