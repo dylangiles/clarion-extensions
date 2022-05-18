@@ -29,6 +29,9 @@ namespace Redcat.TXA
         public const string PROPERTY_EMBED = "EMBED ";
         public const string PROPERTY_NAME = "NAME ";
         public const string PROPERTY_GLOBAL = "GLOBAL";
+        public const string PROPERTY_PROTOTYPE = "PROTOTYPE ";
+        public const string PROPERTY_PARAMETERS = "PARAMETERS ";
+        public const string PROPERTY_NOEXPORT = "NOEXPORT";
 
         public const string TYPE_DEFAULT = "DEFAULT";
         public const string TYPE_STRING = "STRING";

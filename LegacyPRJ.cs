@@ -13,6 +13,7 @@ namespace Redcat.TXA
         public string Language { get; private set; }
         public List<string> Pragmas { get; private set; }
         public List<CompileDirective> CompileDirectives { get; private set; }
+
         public string Artifact { get; private set; }
 
         private string[] _raw;

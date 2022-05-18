@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace Redcat.TXA
 {
@@ -22,7 +23,10 @@ namespace Redcat.TXA
             TemplateSymbol,
             MultiSymbolInstance,
             Embed
-        }       
+        }
+
+        private string _name;
+        public string Name => _name;
 
         private string _originalFilename;
         private List<string> _rawLines;
@@ -40,6 +44,14 @@ namespace Redcat.TXA
         private List<Module> _modules;
         public List<Module> Modules => _modules;
 
+        private int _moduleIndex;
+        public int ModuleIndex => _moduleIndex;
+
+        private List<string> _assumedModules;
+        public List<string> AssumedModules => _assumedModules;
+
+        private List<ModuleSortOrder> _moduleSortOrder;
+
         // [APPLICATION]
         private int _version;
         private string _todoTemplate;
@@ -53,16 +65,19 @@ namespace Redcat.TXA
         private List<TemplateSymbol> _globalSymbols;
         private TemplateSymbol _currentSymbol;
 
-        public ParsedApplication()
+        public ParsedApplication(string name)
         {
+            _name = name;
             _rawLines = new List<string>();
             _globalSymbols = new List<TemplateSymbol>();
             _modules = new List<Module>();
+            _assumedModules = new List<string>();
+            _moduleSortOrder = new List<ModuleSortOrder>();
         }
 
         public void Parse(string filename)
         {
-
+            
             using(FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 using(StreamReader sr = new StreamReader(fs))
@@ -76,6 +91,7 @@ namespace Redcat.TXA
             List<string> rawPrj = new List<string>();
             List<string> rawProgramSection = new List<string>();
             List<string> currentModule = new List<string>();
+            bool buildingModuleList = false;
 
             for (int i = 0; i < _rawLines.Count; i++)
             {
@@ -120,6 +136,9 @@ namespace Redcat.TXA
                         {
                             // Modules.Count + 1 because the module hasn't been added yet
                             _modules.Add(new Module(currentModule.ToArray(), this, Modules.Count + 1));
+
+                            AddLastModuleToSortOrder();
+
                             currentModule.Clear();
                         }
 
@@ -130,6 +149,29 @@ namespace Redcat.TXA
                     //    _state = ParseState.Procedure;
                     //    break;
                 }
+
+                if(buildingModuleList)
+                {
+                    if(_rawLines[i].Contains("WHEN  "))
+                    {
+                        string moduleName = _rawLines[i].Replace("WHEN  (\'", string.Empty);
+                        int nextQuoteLocation = -1;
+                        for(int j = 0; j < moduleName.Length; j++)
+                        {
+                            if (moduleName[j] == '\'')
+                            {
+                                nextQuoteLocation = j;
+                                break;
+                            }   
+                        }
+
+                        moduleName = moduleName.Substring(0, nextQuoteLocation);
+                        _assumedModules.Add(moduleName);
+                    }
+                }
+
+                if(_rawLines[i].Contains('%') && buildingModuleList)
+                    buildingModuleList = false;
 
                 switch (_state)
                 {
@@ -152,11 +194,22 @@ namespace Redcat.TXA
                         currentModule.Add(_rawLines[i]);
                         break;
                 }
+
+                if (_state == ParseState.Application)
+                {
+                    if (_rawLines[i].Contains("%GenerationCompleted"))
+                        buildingModuleList = true;
+                }
             }
+            
             
             // Get the last module
             if(_state == ParseState.Module)
+            {
                 _modules.Add(new Module(currentModule.ToArray(), this, Modules.Count + 1));
+                AddLastModuleToSortOrder();
+            }
+                
             
 
             // This is only here as a spot to whack a breakpoint
@@ -172,7 +225,27 @@ namespace Redcat.TXA
 
         }
 
-        
 
+        public void IncrementModuleIndex() => _moduleIndex += 1;
+
+        public void DumpModuleSortOrder(string filename)
+        {
+            string json = JsonConvert.SerializeObject(_moduleSortOrder, Formatting.Indented);
+            using (FileStream fs = File.Create(filename))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                    sw.Write(json);
+            }
+        }
+
+        private void AddLastModuleToSortOrder()
+        {
+            _moduleSortOrder.Add(
+                new ModuleSortOrder {
+                    Name = _modules.Last().Name,
+                    Order = _moduleSortOrder.Count
+                }
+            );
+        }
     }
 }
