@@ -7,7 +7,7 @@ using System.IO;
 using System.Globalization;
 using Newtonsoft.Json;
 
-namespace Redcat.TXA
+namespace ClarionExtensions.TXA
 {
     public class ParsedApplication
     {

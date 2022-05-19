@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Redcat.TXA
+namespace ClarionExtensions.TXA
 {
     public class ModuleSortOrder
     {
