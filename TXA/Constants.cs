@@ -17,6 +17,7 @@ namespace ClarionExtensions.TXA
         public const string SYMBOL_COMMON = "[COMMON]";
         public const string SYMBOL_PROMPTS = "[PROMPTS]";
         public const string SYMBOL_END = "[END]";
+        public const string SYMBOL_WHEN = "WHEN";
 
         public const string PROPERTY_VERSION = "VERSION ";
         public const string PROPERTY_TODO = "TODO ";
@@ -32,6 +33,8 @@ namespace ClarionExtensions.TXA
         public const string PROPERTY_PROTOTYPE = "PROTOTYPE ";
         public const string PROPERTY_PARAMETERS = "PARAMETERS ";
         public const string PROPERTY_NOEXPORT = "NOEXPORT";
+        public const string PROPERTY_MULTI = "MULTI";
+        public const string PROPERTY_TIMES = "TIMES";
 
         public const string TYPE_DEFAULT = "DEFAULT";
         public const string TYPE_STRING = "STRING";

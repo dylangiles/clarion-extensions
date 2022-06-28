@@ -65,7 +65,9 @@ namespace ClarionExtensions.TXA
         private List<TemplateSymbol> _globalSymbols;
         private TemplateSymbol _currentSymbol;
 
-        public ParsedApplication(string name)
+        private bool _deep = false;
+
+        public ParsedApplication(string name, bool deep = false)
         {
             _name = name;
             _rawLines = new List<string>();
@@ -73,6 +75,7 @@ namespace ClarionExtensions.TXA
             _modules = new List<Module>();
             _assumedModules = new List<string>();
             _moduleSortOrder = new List<ModuleSortOrder>();
+            _deep = deep;
         }
 
         public void Parse(string filename)
@@ -80,8 +83,10 @@ namespace ClarionExtensions.TXA
             
             using(FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                using(StreamReader sr = new StreamReader(fs))
+                
+                using(StreamReader sr = new StreamReader(fs, Encoding.GetEncoding(1252)))
                 {
+                    
                     while(!sr.EndOfStream)
                         _rawLines.Add(sr.ReadLine());   
                 }
@@ -177,6 +182,24 @@ namespace ClarionExtensions.TXA
                 {
                     case ParseState.Application: 
                     case ParseState.Project:
+                        // Fix for dodgy copyright symbol in application symbol
+                        //if (_rawLines[i].Contains("%verCopyright"))
+                        //{
+
+                        //    //char[] asciiChars = .ToCharArray();
+                        //    //byte[] asciiBytes = new byte[asciiChars.Length * 2];
+
+                        //    //_rawLines[i] = asciiChars.ToString();
+                        //    //if(_rawLines.Contains("\xFFFD"))
+                        //    //    _rawLines[i] = _rawLines[i].Replace("\xFFFD", "\u00A9");
+
+                        //    //if (_rawLines.Contains("\x3F"))
+                        //    //    _rawLines[i] = _rawLines[i].Replace("\x3F", "\u00A9");
+
+                        //    string stringx = _rawLines[i];
+                        //    Console.WriteLine("stop");
+                        //}
+
                         // Add line to application section if state is either [APPLICATION] or [PROJECT]
                         rawApplication.Add(_rawLines[i]);
 
